@@ -19,7 +19,7 @@ new Vue({
     reviews: [],
     flickityOptions: {
       initialIndex: 0,
-      prevNextButtons: false,
+      prevNextButtons: true,
       pageDots: false,
       wrapAround: false,
       groupCells: true
@@ -28,13 +28,15 @@ new Vue({
     },
     currentIndex: 0
   },
-  watch: {
-    currentIndex() {
-      console.log(this.currentIndex)
-      console.log(this.reviews.length)
-    }
-  },
   methods: {
+    onInit() {
+      this.$refs.flickity.on('change', (event) => {
+        this.currentIndex = event
+
+        if (!this.$refs.flickity.$flickity.nextButton.isEnabled)
+          this.currentIndex = this.reviews.length
+      })
+    },
     makeArrWithRequiredImages(data) {
       return data.map((item) => {
         const requiredPic = require(`../images/content/${item.avatar}`)
@@ -43,29 +45,11 @@ new Vue({
         return item
       })
     },
-    checkWidth(direction) {
-      if (window.innerWidth <= 480) {
-        direction === 'next' ? this.currentIndex++ : this.currentIndex--
-      } else {
-        direction === 'next'
-          ? (this.currentIndex = this.currentIndex + 2)
-          : (this.currentIndex = this.currentIndex - 2)
-      }
-    },
     next() {
-      this.checkWidth('next')
-
-      if (this.currentIndex >= this.reviews.length)
-        this.currentIndex = this.reviews.length - 2
-
       this.$refs.flickity.next()
     },
 
     previous() {
-      this.checkWidth('prev')
-
-      if (this.currentIndex <= 0) this.currentIndex = 0
-
       this.$refs.flickity.previous()
     }
   },

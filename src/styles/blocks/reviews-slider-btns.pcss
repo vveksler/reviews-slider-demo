@@ -31,9 +31,13 @@
     transform: translate(-50%, -50%);
   }
 
-  &_prev {
+  &--prev {
     &:before {
       transform: translate(-50%, -50%) rotate(-180deg);
     }
   }
+}
+
+.flickity-prev-next-button.previous, .flickity-prev-next-button.next {
+  display: none;
 }
