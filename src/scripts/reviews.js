@@ -9,7 +9,7 @@ const review = {
 }
 
 new Vue({
-  el: '#reviews-slider',
+  el: '#reviews',
   template: '#reviews-template',
   components: {
     Flickity,
@@ -21,10 +21,17 @@ new Vue({
       initialIndex: 0,
       prevNextButtons: false,
       pageDots: false,
-      wrapAround: true,
+      wrapAround: false,
       groupCells: true
 
       // any options from Flickity can be used
+    },
+    currentIndex: 0
+  },
+  watch: {
+    currentIndex() {
+      console.log(this.currentIndex)
+      console.log(this.reviews.length)
     }
   },
   methods: {
@@ -36,18 +43,34 @@ new Vue({
         return item
       })
     },
+    checkWidth(direction) {
+      if (window.innerWidth <= 480) {
+        direction === 'next' ? this.currentIndex++ : this.currentIndex--
+      } else {
+        direction === 'next'
+          ? (this.currentIndex = this.currentIndex + 2)
+          : (this.currentIndex = this.currentIndex - 2)
+      }
+    },
     next() {
+      this.checkWidth('next')
+
+      if (this.currentIndex >= this.reviews.length)
+        this.currentIndex = this.reviews.length - 2
+
       this.$refs.flickity.next()
     },
 
     previous() {
+      this.checkWidth('prev')
+
+      if (this.currentIndex <= 0) this.currentIndex = 0
+
       this.$refs.flickity.previous()
     }
   },
   created() {
     const data = require('../data/reviews.json')
     this.reviews = this.makeArrWithRequiredImages(data)
-    console.log('REVIEWS=>>>', this.reviews)
-    
   }
 })
