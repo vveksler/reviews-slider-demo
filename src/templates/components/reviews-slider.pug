@@ -7,7 +7,7 @@ script(type="text/x-template")#reviews-template
           button(type="button" @click="previous()" :disabled="currentIndex === 0" :class="{disabled: currentIndex === 0}").reviews-slider-buttons__btn.reviews-slider-buttons__btn--prev
           button(type="button" @click="next()" :disabled="reviews.length === currentIndex" :class="{disabled: reviews.length === currentIndex}").reviews-slider-buttons__btn.reviews-slider-buttons__btn--next
       .reviews__content
-        .reviews-slider
+        .reviews-slider(v-if="reviews.length")
             flickity(ref="flickity" :options="flickityOptions" @init="onInit")
               li(v-for="review in reviews" :key="review.id").reviews-slider__item.review
                 review(
